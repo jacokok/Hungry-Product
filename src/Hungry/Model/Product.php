@@ -24,6 +24,7 @@ class Product
 	private $currency;
 	private $settings;
 	private $category_settings;
+	private $type;
 
 	static $categories_cache = array();
 	static $categories_meta_cache = array();
@@ -33,9 +34,10 @@ class Product
 	*
 	* @param $product Product as WooCommerce object
 	*/
-	public function __construct(\WP_Post $product)
+	public function __construct(\WP_Post $product, $type)
 	{
 		$this->product = new \WC_Product($product);
+		$this->type = $type;
 	}
 
 	/**
@@ -49,9 +51,14 @@ class Product
 
 		if($this->validate_product_data($p)) {
 
-			$template = new Template(\Hungry\__ASSETS__ . '/google-item.xml');
+			if ($this->type == "pricecheck") {
+				$template = new Template(\Hungry\__ASSETS__ . '/pc-item.xml');
+			}
+			else{
+				$template = new Template(\Hungry\__ASSETS__ . '/google-item.xml');
+			}
 
-			$template->id = substr($p->id, 0, 50);
+			$template->id = substr($p->get_id(), 0, 50);
 			$template->title = substr($p->get_title(),0,150);
 			$template->description = substr($p->get_description(),0,5000);
 			$template->link = substr($p->get_permalink(),0,2000);
@@ -118,7 +125,7 @@ class Product
 	private function get_settings()
 	{
 		if(empty($this->settings)) {
-			$this->settings = get_post_meta($this->product->id, 'hungry_settings', true);
+			$this->settings = get_post_meta($this->product->get_id(), 'hungry_settings', true);
 		}
 
 		return $this->settings;
@@ -136,16 +143,18 @@ class Product
 		// Setting from category
 		$categories = $this->get_categories();
 		
-		foreach($categories as $c) {
+		if (is_array($categories)) {
+			foreach($categories as $c) {
 
-			if(!isset(self::$categories_meta_cache[$c['term_id']])) {
-				self::$categories_meta_cache[$c['term_id']] = get_metadata('woocommerce_term', $c['term_id'], 'hungry_settings', true);
-			}
+				if(!isset(self::$categories_meta_cache[$c['term_id']])) {
+					self::$categories_meta_cache[$c['term_id']] = get_metadata('woocommerce_term', $c['term_id'], 'hungry_settings', true);
+				}
 
-			$settings = self::$categories_meta_cache[$c['term_id']];
+				$settings = self::$categories_meta_cache[$c['term_id']];
 
-			if(!empty($settings[$name])) {
-				$category_setting = $settings[$name];
+				if(!empty($settings[$name])) {
+					$category_setting = $settings[$name];
+				}
 			}
 		}
 
@@ -167,7 +176,7 @@ class Product
 	private function get_categories()
 	{
 		$args = array( 'taxonomy' => 'product_cat',);
-		$terms = wp_get_post_terms($this->product->id,'product_cat', $args);
+		$terms = wp_get_post_terms($this->product->get_id(),'product_cat', $args);
 
 		$result = array();
 

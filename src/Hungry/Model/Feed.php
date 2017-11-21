@@ -15,23 +15,35 @@ class Feed
 {
 	// Constraints
 	const MAX_PRODUCTS = 5000;
+	private $type;
+
+	public function __construct($type)
+	{
+		$this->type = $type;
+	}
 
 	/**
      * Generate XML ready for Google Merchants
      */
 	public function getXML()
 	{
+			
+		if ($this->type == "pricecheck") {
+			$template = new Template(\Hungry\__ASSETS__ . '/pc-feed.xml');
+		}
+		else{
 			$template = new Template(\Hungry\__ASSETS__ . '/google-feed.xml');
+		}
 
-			$template->title = get_bloginfo('name');
-			$template->link = get_bloginfo('url');
-			$template->description = get_bloginfo('description');
-			$template->items = $this->create_items_list();
+		$template->title = get_bloginfo('name');
+		$template->link = get_bloginfo('url');
+		$template->description = get_bloginfo('description');
+		$template->items = $this->create_items_list();
 
-			$xml = $template->render();
-			$xml = XML::remove_empty_nodes($xml);
+		$xml = $template->render();
+		$xml = XML::remove_empty_nodes($xml);
 
-			return $xml;
+		return $xml;
 	}
 
 	/**
@@ -49,7 +61,7 @@ class Feed
 
 			$posts = $query->get_posts();
 			foreach($posts as $post) {
-				$tfm_product = new Product($post);
+				$tfm_product = new Product($post, $this->type);
 				$itemsXML .= $tfm_product->get_xml();
 			}
 		}

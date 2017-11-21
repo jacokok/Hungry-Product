@@ -29,14 +29,14 @@ class Feed
 
 		switch($feed_name){
 		    case 'google_feed' :
-				$feed = new Model\Feed();
+				$feed = new Model\Feed("google_feed");
 
 				header('Content-Type: application/xml');
 				
 				echo $feed->getXML();
 				exit;
 			case 'pricecheck' :
-				$feed = new Model\Feed();
+				$feed = new Model\Feed("pricecheck");
 
 				header('Content-Type: application/xml');
 				

@@ -1,0 +1,4 @@
+<?php echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
+<Offers xmlns:g='pc'>
+    <?php echo $items ?>
+</Offers>

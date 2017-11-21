@@ -1,0 +1,17 @@
+<Offer>
+  <Category><?php echo $category ?></Category>
+  <ProductName><![CDATA[<?php echo $title ?>]]></ProductName>
+  <Manufacturer><?php echo $brand ?></Manufacturer>
+  <Description><![CDATA[<?php echo $description ?>]]></Description>
+  <Price><?php echo $price ?></Price>
+  <ProductURL><?php echo $link ?></ProductURL>
+  <ImageURL><?php echo $image_link ?></ImageURL>
+  <StockAvailability><?php echo $availability ?></StockAvailability>
+  <ShopSKU><?php echo $id ?></ShopSKU>
+
+  <g:condition><?php echo $condition ?></g:condition>
+  <g:product_type><?php echo $product_type ?></g:product_type>
+  <g:gtin><?php echo $gtin ?></g:gtin>
+  <g:mpn><?php echo $mpn ?></g:mpn>
+  <g:shipping_weight><?php echo $weight ?></g:shipping_weight>
+</Offer>
