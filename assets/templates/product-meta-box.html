@@ -1,0 +1,44 @@
+<p>
+	<label for="hungry-identifier-exists"><?php _e('Identifier does not exist', 'hungry-google-product-feed'); ?></label>
+	<input id="hungry-identifier-exists" type="checkbox" name="hungry-identifier-exists" value="1" <?php echo isset($settings['identifier']) && $settings['identifier'] == 'unexist' ? 'checked' : ''; ?>/> <br />
+	<small><?php _e('Check this field if the item does not have unique product identifier, such as GTIN, MPN or brand.', 'hungry-google-product-feed'); ?></small>
+</p>
+
+<div id="hungry-upi">
+	<p>
+	    <label for="hungry-gtin"><?php _e('Product GTIN', 'hungry-google-product-feed'); ?></label> - <small><?php _e('Global Trade Item Numbers (GTIN) include <strong>UPC</strong>, <strong>EAN</strong> (in Europe), <strong>JAN</strong> and <strong>ISBN</strong>', 'hungry-google-product-feed'); ?></small><br />
+	    <input type="text" name="hungry_gtin" id="hungry-gtin" value="<?php echo isset($settings['gtin']) ? $settings['gtin'] : ''; ?>" placeholder="<?php _e('GTIN', 'hungry-google-product-feed'); ?>" />
+	</p>
+
+	<p>
+	    <label for="hungry-mpn"><?php _e('Product MPN', 'hungry-google-product-feed'); ?></label> - <small><?php _e('Manufacturer Part Number', 'hungry-google-product-feed'); ?></small><br />
+	    <input type="text" name="hungry_mpn" id="hungry-mpn" value="<?php echo isset($settings['mpn']) ? $settings['mpn'] : ''; ?>" placeholder="<?php _e('MPN', 'hungry-google-product-feed'); ?>" />
+	</p>
+
+	<p>
+	    <label for="hungry-brand"><?php _e('Product brand', 'hungry-google-product-feed'); ?></label><br />
+	    <input type="text" name="hungry_brand" id="hungry-brand" value="<?php echo isset($settings['brand']) ? $settings['brand'] : ''; ?>" placeholder="<?php _e('Brand', 'hungry-google-product-feed'); ?>" />
+	</p>
+</div>
+<p>
+    <label for="hungry-category"><?php _e('Product Category', 'hungry-google-product-feed'); ?></label><br />
+    <select name="hungry_category" id="hungry-category">
+        <option value="0">Use default</option>
+        <?php foreach($google_categories as $k => $v): ?>                        
+            <option value="<?php echo $k; ?>" <?php if(isset($settings['category']) && $v == $settings['category']){ echo 'selected'; }; ?>><?php echo $v; ?></option>
+        <?php endforeach; ?>
+    </select>
+</p>
+
+<input type="hidden" name="hungry_settings" value="1" />
+
+<script type="text/javascript" >
+	jQuery('document').ready(function () {
+
+		jQuery('#hungry-identifier-exists').click(function () {
+			jQuery('#hungry-upi').toggle(!this.checked);
+		})
+
+		jQuery('#hungry-upi').toggle(!jQuery('#hungry-identifier-exists').is(':checked'));
+	});
+</script>
